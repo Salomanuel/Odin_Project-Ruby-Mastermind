@@ -1,5 +1,6 @@
 module Board
 	def board_show
+		#puts "board_show is go"
 		@board.each { |row| puts row.join(" ") }
 	end
 		
@@ -11,6 +12,7 @@ module Board
 	end
 
 	def board_print_turn
+		#puts "this is board_print_turn"
 		@board[turn_number][0] = ">"
 		4.times { |j|	@board[turn_number][j+1] = @guess[j] }
 	end
@@ -23,10 +25,15 @@ module Turn
 	end
 
 	def turn_next	
+		#puts "turn_next is go; @human is #{@human}"
 		@turn ||= 0
 		@turn +=  1
 		loose if @turn >= 10
-		turn
+		
+		case @human
+		when true  then turn
+		when false then ai_turn
+		end
 	end
 
 	def turn
@@ -51,6 +58,7 @@ module Code
 		@code = []
 		4.times { @code << range[rand(6)] }
 		#@code = %w(P V V V)			#cheating for testing
+		@code =  %w(A B E F)
 		return @code
 	end
 end
@@ -61,13 +69,14 @@ module Input
 		when true 	
 			puts "guess the four-character code with the letters A B C D E F" if @turn == 0
 			@guess = gets.chomp.upcase.split("")			
-		when false	then @guess = ai_turn
+		when false	then ai_turn
 		end
 	end
 end
 
 module Analyzer
 	def dots_giver
+		#puts "this is dots_giver"
 		codepop = @code
 		guesson = @guess
 		#puts "guess: #{@guess.join} codepop:#{codepop.join}"
@@ -88,6 +97,7 @@ module Analyzer
 	end
 
 	def turn_score
+		#puts "this is turn score"
 		@board[turn_number][5] = "w:#{@white_dot}"
 		@board[turn_number][6] = "b:#{@black_dot}"
 	end
@@ -100,11 +110,29 @@ end
 
 module AI
 	def ai_turn
-		puts "culo"
+		puts "this is ai_turn"
+		five_guess				#AI move
+		board_print_turn	#writes the move into the board
+		dots_giver				#calculates black and white dots
+		turn_score				#writes the white and black dots into the board
+		board_show				#prints the board
+		turn_next					#calls a new turn
+	end
+
+	def five_guess
+		puts "\n\nturn #{@turn+1}"
+		if 		@turn == 0
+			puts "initializing five-guess-AI"
+			@guess = %w[A A A A]
+		elsif 
+			range = (?A..?F).to_a
+			@guess = []
+			4.times { @guess << range[rand(6)] }
+		end
 	end
 end
 
-class MasterMind
+class MasterMind			#BANANA VARIABLE TO ALWAYS USE AI
 	include Board
 	include Code
 	include Input
@@ -122,10 +150,12 @@ class MasterMind
 
 	def choose_game
 		puts "do you want the computer to play?"
-		case gets.chomp
+		#case gets.chomp
+		bANANA = "yes"
+		case bANANA
 		when "yes"	
-			puts "initializing AI"
 			@human = false
+			ai_turn
 		when "no" 	
 			@human = true
 			turn
