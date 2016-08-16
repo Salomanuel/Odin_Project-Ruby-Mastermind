@@ -57,6 +57,7 @@ end
 
 module Input
 	def input
+		puts "guess the four-character code with the letters A B C D E F" if @turn == nil
 		@guess = gets.chomp.upcase.split("")
 	end
 end
@@ -94,19 +95,34 @@ module Analyzer
 	end
 end
 
+module AI
+	
+end
+
 class MasterMind
 	include Board
 	include Code
 	include Input
 	include Analyzer
 	include Turn
+	include AI
 
 	def initialize
 		board_init
 		code 									#initializes secret code
 		#puts "code: #{@code}" 		#will be deleted									
-		puts "guess the four-character code with the letters A B C D E F"
-		turn
+		choose_game
+	end
+
+	def choose_game
+		puts "do you want the computer to play?"
+		case gets.chomp
+		when "yes"	then puts "initializing AI"
+		when "no" 	then turn
+		else 
+			puts "don't be a moron and choose properly"
+			choose_game
+		end
 	end
 
 end
