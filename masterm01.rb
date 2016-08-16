@@ -57,8 +57,12 @@ end
 
 module Input
 	def input
-		puts "guess the four-character code with the letters A B C D E F" if @turn == nil
-		@guess = gets.chomp.upcase.split("")
+		case @human
+		when true 	
+			puts "guess the four-character code with the letters A B C D E F" if @turn == 0
+			@guess = gets.chomp.upcase.split("")			
+		when false	then @guess = ai_turn
+		end
 	end
 end
 
@@ -80,7 +84,6 @@ module Analyzer
 				guesson[j] = ""
 			end
 		end
-
 		win if @black_dot >= 4
 	end
 
@@ -96,7 +99,9 @@ module Analyzer
 end
 
 module AI
-	
+	def ai_turn
+		puts "culo"
+	end
 end
 
 class MasterMind
@@ -108,7 +113,8 @@ class MasterMind
 	include AI
 
 	def initialize
-		board_init
+		turn_number						#initializes the turn count
+		board_init						#initializes the board
 		code 									#initializes secret code
 		#puts "code: #{@code}" 		#will be deleted									
 		choose_game
@@ -117,8 +123,12 @@ class MasterMind
 	def choose_game
 		puts "do you want the computer to play?"
 		case gets.chomp
-		when "yes"	then puts "initializing AI"
-		when "no" 	then turn
+		when "yes"	
+			puts "initializing AI"
+			@human = false
+		when "no" 	
+			@human = true
+			turn
 		else 
 			puts "don't be a moron and choose properly"
 			choose_game
