@@ -59,8 +59,8 @@ module Code
 		4.times { @code << range[rand(6)] }
 		#@code = %w(P V V V)			#cheating for testing
 		#@code =  %w(A B B A)
-		@code = %w(C B D A)
-		puts "code is #{@code.join(" ")}"
+		#@code = %w(C B D A)
+		#puts "code is #{@code.join(" ")}"
 		return @code
 	end
 end
@@ -120,7 +120,7 @@ end
 
 module AI
 	def ai_turn
-		puts "this is ai_turn"
+		#puts "this is ai_turn"
 		five_guess				#AI move
 		board_print_turn	#writes the move into the board
 		dots_giver				#calculates black and white dots
@@ -132,7 +132,7 @@ module AI
 	def five_guess
 		range = (?A..?F).to_a
 		puts "\n\nturn #{@turn+1}"
-		puts "dots are #{dots}"
+		#puts "dots are #{dots}"
 
 		old_guess = @guess.dup if dots > 0
 		@guess = []	
@@ -148,7 +148,7 @@ module AI
 			@guess_library << @guess.join()
 			@guess.shuffle! if @guess_library.include?(@guess.join)
 		end
-		puts "library: #{@guess_library.join(" ")}"
+		#puts "library: #{@guess_library.join(" ")}"
 	end
 
 	def dots
@@ -176,9 +176,9 @@ class MasterMind			#BANANA VARIABLE TO ALWAYS USE AI
 
 	def choose_game
 		puts "do you want the computer to play?"
-		#case gets.chomp
-		bANANA = "yes" #"no" 
-		case bANANA
+		case gets.chomp
+		#bANANA = "yes" #"no" 
+		#case bANANA
 		when "yes"	
 			@human = false
 			ai_turn
