@@ -58,7 +58,8 @@ module Code
 		@code = []
 		4.times { @code << range[rand(6)] }
 		#@code = %w(P V V V)			#cheating for testing
-		@code =  %w(A B B A)
+		#@code =  %w(A B B A)
+		@code = %w(C B D A)
 		puts "code is #{@code.join(" ")}"
 		return @code
 	end
@@ -129,15 +130,31 @@ module AI
 	end
 
 	def five_guess
+		range = (?A..?F).to_a
 		puts "\n\nturn #{@turn+1}"
-		if 		@turn == 0
-			puts "initializing five-guess-AI"
-			@guess = %w[A A A A]
-		elsif 
-			range = (?A..?F).to_a
-			@guess = []
-			(@black_dot - 4).times { @guess << range[rand(6)] }
+		puts "dots are #{dots}"
+
+		old_guess = @guess.dup if dots > 0
+		@guess = []	
+
+		@dots.times { |i| @guess << old_guess[i] }	#recycling old guesses
+		@j ||= 0
+		(4 - @dots).times { |i| @guess << range[@j] }
+		@j += 1													#ALL THIS GIVES 3 DOTS
+
+		@guess_library ||= []
+		
+		if dots > 3
+			@guess_library << @guess.join()
+			@guess.shuffle! if @guess_library.include?(@guess.join)
 		end
+		puts "library: #{@guess_library.join(" ")}"
+	end
+
+	def dots
+		@white_dot ||= 0
+		@black_dot ||= 0
+		@dots = @white_dot + @black_dot
 	end
 end
 
@@ -160,7 +177,7 @@ class MasterMind			#BANANA VARIABLE TO ALWAYS USE AI
 	def choose_game
 		puts "do you want the computer to play?"
 		#case gets.chomp
-		bANANA = "no" #"yes"
+		bANANA = "yes" #"no" 
 		case bANANA
 		when "yes"	
 			@human = false
