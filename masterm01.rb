@@ -58,7 +58,8 @@ module Code
 		@code = []
 		4.times { @code << range[rand(6)] }
 		#@code = %w(P V V V)			#cheating for testing
-		@code =  %w(A B E F)
+		@code =  %w(A B B A)
+		puts "code is #{@code.join(" ")}"
 		return @code
 	end
 end
@@ -77,20 +78,28 @@ end
 module Analyzer
 	def dots_giver
 		#puts "this is dots_giver"
-		codepop = @code
-		guesson = @guess
-		#puts "guess: #{@guess.join} codepop:#{codepop.join}"
-		#puts "code: #{@code}"
+		codepop = @code.dup
+		guesson = @guess.dup
+		#puts "#{@code} #{@guess} are code and guess"
+		#puts "#{codepop} #{guesson} are the lame copies"
 		@white_dot = 0
 		@black_dot = 0
 
-		@guess.each_index do |j|
-			if codepop[j] == @guess[j]
+		codepop.each_index do |j|			#BLACK ONES
+			#puts "black: #{codepop[j]} = #{guesson[j]} #{codepop[j] == guesson[j]}; w: #{@white_dot}, b: #{@black_dot}"
+			if codepop[j] == guesson[j]    and guesson[j] != ""
 				@black_dot += 1
-			elsif codepop.include?(guesson[j])
-				#puts "#{codepop} include #{guesson[j]}? #{codepop.include?(guesson[j])}"
-				@white_dot += 1
-				guesson[j] = ""
+				codepop[j] = ""
+				guesson[j] = ""			#overkill? better to be sure
+			else
+				codepop.each_index do |k|	#WHITE ONES
+			#puts "white: #{codepop[k]} = #{guesson[j]} #{codepop[k] == guesson[j]} w: #{@white_dot}, b: #{@black_dot}"
+					if codepop[k] == guesson[j] and guesson[j] != ""
+						 @white_dot += 1
+						 guesson[j] = ""				
+						 codepop[k] = ""
+					end
+				end
 			end
 		end
 		win if @black_dot >= 4
@@ -98,8 +107,8 @@ module Analyzer
 
 	def turn_score
 		#puts "this is turn score"
-		@board[turn_number][5] = "w:#{@white_dot}"
-		@board[turn_number][6] = "b:#{@black_dot}"
+		@board[turn_number][5] = "\tb:#{@black_dot}"
+		@board[turn_number][6] = "w:#{@white_dot}"
 	end
 
 	def win
@@ -127,7 +136,7 @@ module AI
 		elsif 
 			range = (?A..?F).to_a
 			@guess = []
-			4.times { @guess << range[rand(6)] }
+			(@black_dot - 4).times { @guess << range[rand(6)] }
 		end
 	end
 end
@@ -151,7 +160,7 @@ class MasterMind			#BANANA VARIABLE TO ALWAYS USE AI
 	def choose_game
 		puts "do you want the computer to play?"
 		#case gets.chomp
-		bANANA = "yes"
+		bANANA = "no" #"yes"
 		case bANANA
 		when "yes"	
 			@human = false
