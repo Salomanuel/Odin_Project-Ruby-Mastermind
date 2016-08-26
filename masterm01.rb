@@ -1,3 +1,5 @@
+# the ai could get better by counting white and black dots
+
 module Board
 	def board_show
 		#puts "board_show is go"
